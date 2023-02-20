@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import router from "./router";
-import AppError from "./helpers/AppError";
+import ApiError from "./helpers/ApiError";
 import { DB_URI, PORT } from "./config/default";
 
 const app: Express = express();
@@ -15,14 +15,14 @@ app.use(cookieParser());
 app.use("/api", router);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const error = new AppError(
+  const error = new ApiError(
     `Could not find ${req.originalUrl} on this server!`,
     404
   );
   next(error);
 });
 
-app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
+app.use((err: ApiError, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 

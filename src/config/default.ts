@@ -12,4 +12,5 @@ export const {
   EMAIL_LOGIN = "",
   EMAIL_PASSWORD = "",
   API_URL = "",
+  APP_URL = "",
 } = process.env;
