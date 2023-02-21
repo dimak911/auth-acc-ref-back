@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from "../config/default";
 import { IUserDto } from "../dtos/user.dto";
 import { Types } from "mongoose";
-import TokenModel from "../models/token.model";
+import TokenModel, { ITokenDb } from "../models/token.model";
 
 class TokenService {
   async generateTokens(payload: IUserDto) {
@@ -35,6 +35,34 @@ class TokenService {
 
   async removeToken(refreshToken: string) {
     const tokenData = await TokenModel.deleteOne({ refreshToken });
+
+    return tokenData;
+  }
+
+  validateAccessToken(token: string) {
+    try {
+      const userData = jwt.verify(token, JWT_ACCESS_SECRET) as IUserDto;
+
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token: string) {
+    try {
+      const userData = jwt.verify(token, JWT_REFRESH_SECRET) as IUserDto;
+
+      return userData;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async findToken(refreshToken: string) {
+    const tokenData: ITokenDb | null = await TokenModel.findOne({
+      refreshToken,
+    });
 
     return tokenData;
   }

@@ -42,11 +42,18 @@ class UserController {
   }
 
   async refresh(req: Request, res: Response, next: NextFunction) {
-    //
+    const { refreshToken } = req.cookies;
+
+    const userData = await userService.refresh(refreshToken);
+    res.cookie("refreshToken", userData.refreshToken, cookieConfig);
+
+    return res.json(userData);
   }
 
   async getUsers(req: Request, res: Response, next: NextFunction) {
-    throw new ApiError("Oooops!", 444);
+    const users = await userService.getAllUsers();
+
+    return res.json(users);
   }
 }
 
