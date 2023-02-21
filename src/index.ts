@@ -4,12 +4,17 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import router from "./router";
 import ApiError from "./helpers/ApiError";
-import { DB_URI, PORT } from "./config/default";
+import { APP_URL, DB_URI, PORT } from "./config/default";
 
 const app: Express = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: APP_URL,
+  })
+);
 app.use(cookieParser());
 
 app.use("/api", router);
